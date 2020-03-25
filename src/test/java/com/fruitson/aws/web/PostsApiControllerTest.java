@@ -100,6 +100,29 @@ public class PostsApiControllerTest {
     }
 
     @Test
+    public void Posts_삭제된다() throws Exception {
+        // given
+        Posts savedPosts = postsRepository.save(Posts.builder()
+                .title("title")
+                .content("content")
+                .author("author")
+                .build());
+
+        Long saveId = savedPosts.getId();
+        String url = "http://localhost:" + port + "/api/v1/posts/" + saveId;
+
+        // when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Long.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Posts> all = postsRepository.findAll();
+        assertThat(all).isEmpty();
+    }
+
+    @Test
     public void BaseTimeEntity_등록() {
         // given
         LocalDateTime now = LocalDateTime.of(2019, 6, 4, 0, 0, 0);

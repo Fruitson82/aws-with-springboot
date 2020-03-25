@@ -47,6 +47,28 @@ public class PostsRepositoryTest {
 
     }
 
+    @Test
+    public void 게시글_삭제하기() {
+        // given
+        String title = "테스트 게시글";
+        String content = "테스트 본문";
 
+        postsRepository.save(Posts.builder()
+                .title(title)
+                .content(content)
+                .author("fruitson@gmail.com")
+                .build());
+        List<Posts> postsList = postsRepository.findAll();
+        Posts posts = postsList.get(0);
+
+        // when
+        postsRepository.delete(posts);
+
+        // then
+        postsList = postsRepository.findAll();
+        assertThat(postsList).isEmpty();
+
+
+    }
 
 }
